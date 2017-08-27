@@ -14,4 +14,4 @@
           msg-grouped (partition-by identity msg-in-bin)
           msg-final (apply str (map (comp #(apply str %) chuckify) msg-grouped))]
 
-      (println (apply str (drop-last msg-final)))))
+    (println (apply str (drop-last msg-final)))))
