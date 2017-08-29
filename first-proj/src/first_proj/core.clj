@@ -46,6 +46,9 @@
 ; what is hashable / can be a key?
 (get {+ "reads plus" * "reads times"} +) ; no error
 
+; add to map
+(assoc {} :key 10)
+
 
 ; VECTORS
 (vector "a" "b" "c")
@@ -109,7 +112,9 @@
 
 
 ; programming to abstraction: sounds like Python's duck typing & protocols
-; SEQUENCE (SEQ) is sth that has first, rest and cons implemented (Haskell's head, tail, cons)
+
+; SEQUENCE (SEQ) ABSTRACTION
+; is sth that has first, rest and cons implemented (Haskell's head, tail, cons)
 (seq #{1 2 3}) ; or seq whatever
 
 ; seq to map
@@ -118,6 +123,59 @@
 ; funcs acting on seq:
 (map str ["a" "b" "c"] ["A" "B" "C"])
 (map #(map % [1 2 3] [2 3 4]) [+ * - /])
+
+(reduce - '(1 2 3 4)) ; -8
+(reduce - 0 '(1 2 3 4)) ; -10
+
+; completely haskell-ish:
+(take 5 (cycle [1 2 3]))
+(drop 5 [1 2 3])
+(take-while #(< % 5) (range 1 100))
+(drop-while #(< % 5) (range 1 100))
+(filter odd? (range 100))
+(some #(> % 5) [0 1])
+
+; sort
+(sort-by first ["ebc" "aff" "afd"])
+
+(concat [1 2] '(3 4) {:a 2})
+; <- all the stuff is returning lazy seqs, even if they were not pushed in
+; constructor to use e.g. in defns is lazy-seq
+
+; repeating
+(take 50 (repeat 5))
+(repeat 8 #(rand-int 10))
+(repeatedly 8 #(rand-int 10))
+
+
+; COLLECTION ABSTRACTION
+; vectors, maps, lists, sets are both collection and seq
+; seq is about elements, collection about whole: empty? every? count
+
+; into is for conversion back to a data structure as stuff always keeps changing to seq... uh
+(into #{:not-neccessarily-empty} (map identity [:a :a]))
+
+; conj, a bit different
+(conj [0] :arg1 :arg2) ; [0 :arg1 :arg2]
+
+
+; apply - replace head just like in Mathematica
+(apply max [1 2 3])
+
+; partial - less elegant than Haskell's (+10), but whatever
+(map (partial + 10) #{7 8 9})
+
+; complement
+
+; resource read
+(slurp "resources/test.csv")
+(slurp "http://clojuredocs.org")
+; write
+(spit "resources/out.txt" "test")
+
+
+
+
 
 
 
