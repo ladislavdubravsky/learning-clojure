@@ -14,6 +14,5 @@
                    (map #(map (fn [x] (Integer/parseInt x)) %))
                    (map #(vector (+ (first %) (last %)) (first %)))
                    sort
-                   (#(count-tasks % 0 0)))]
-
-        (println (if (= res 0) 1 res))))
+                   (#(count-tasks % 0 0))
+                   println)]))
