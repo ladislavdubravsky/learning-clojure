@@ -38,6 +38,7 @@
 ((get dict "key2") 7 8)
 ((dict "key2") 7 8)
 (get-in {:a 0 :b {:c "ho hum"}} [:b :c]) ; nested getting
+(get {:a 1 :b 2} :z "missing")
 
 ; hash-map constructor + keyword :kw is just something that evaluates to itself, interned string
 (hash-map :a 2 :b 15)
@@ -49,6 +50,9 @@
 ; add to map
 (assoc {} :key 10)
 
+; keys vals
+(keys (assoc {} :key 10))
+(vals (assoc {} :key 10))
 
 ; VECTORS
 (vector "a" "b" "c")
@@ -121,11 +125,14 @@
 (into {} [[:a 1] [:c 3] [:b 2]])
 
 ; funcs acting on seq:
+; map. maps swallow Haskell's zipWiths!
 (map str ["a" "b" "c"] ["A" "B" "C"])
 (map #(map % [1 2 3] [2 3 4]) [+ * - /])
 
 (reduce - '(1 2 3 4)) ; -8
 (reduce - 0 '(1 2 3 4)) ; -10
+; reductions instead of scanl. Right folds absent for some (good) reason, use two reverses
+(reductions - 0 '(1 2 3 4))
 
 ; completely haskell-ish:
 (take 5 (cycle [1 2 3]))
@@ -173,6 +180,33 @@
 ; write
 (spit "resources/out.txt" "test")
 
+
+; PROJECT ORGANIZATION
+; require
+(require 'clojure.string)
+; (require '[clojure.string :as s])
+; look at this when doing real project
+
+
+; MACROS
+; reader
+(read-string "(+ 1 2)") ; (+ 1 2)
+(eval (read-string "(+ 1 2)"))
+(read-string "#(+ 1 %)")
+
+; evaluator
+(type (read-string "+")) ; clojure.Lang.Symbol
+; special forms can't be covered by funcs: if, quote, def, do, let, fn, loop, recur...
+
+(defmacro ignore-last
+  [function-call]
+  (butlast function-call))
+
+(macroexpand '(ignore-last (+ 1 2 (* 2 3))))
+(macroexpand '(for [i [1 2 3]] (* i i))) ; not all that helpful
+(macroexpand '(and cond1 cond2))
+
+; threading macros -> ->> etc.
 
 
 
